@@ -663,12 +663,17 @@
                     alert("Please fill all the details");
                 } else {
                     var xhr = new XMLHttpRequest();
-                    xhr.open("GET", "http://localhost:8081/send", true);
+                    xhr.open("POST", "http://localhost:8081/send", true);
+                    xhr.setRequestHeader('Accept', 'application/json');
+                    xhr.setRequestHeader('Content-Type', 'application/json');
                     xhr.onload = function (e) {
                         if (xhr.readyState === 4) {
                             if (xhr.status === 200) {
                                 console.log(xhr.responseText);
-                                alert("The question has been sent");
+                                alert("Your question has been sent.");
+                                document.getElementById("contact-name").value = "";
+                                document.getElementById("contact-email").value = "";
+                                document.getElementById("contact-question").value = "";
                             } else {
                                 console.error(xhr.statusText);
                             }
@@ -677,7 +682,14 @@
                     xhr.onerror = function (e) {
                         console.error(xhr.statusText);
                     };
-                    xhr.send();
+                    xhr.send(
+                        JSON.stringify({
+                            siteName: "US",
+                            name: document.getElementById("contact-name").value.trim(),
+                            email: document.getElementById("contact-email").value.trim(),
+                            question: document.getElementById("contact-question").value.trim()
+                        })
+                    );
                 }
             }
         </script>

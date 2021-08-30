@@ -1,6 +1,12 @@
 var nodemailer = require('nodemailer');
 var express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+
 var app = express();
+
+app.use(bodyParser.json()) // for parsing application/json
+app.use(cors());
 
 var server = app.listen(8081, function () {
     var host = server.address().address;
@@ -16,14 +22,14 @@ var transporter = nodemailer.createTransport({
     }
 });
 
-var mailOptions = {
-    from: 'sharathhtc@gmail.com',
-    to: 'sarath.s@10xds.com',
-    subject: 'Sending Email using Node.js',
-    html: '<h1>Welcome</h1><p>That was easy!</p>'
-};
+app.post('/send', cors(), function (req, res) {
+    var mailOptions = {
+        from: 'sharathhtc@gmail.com',
+        to: 'sarath.s@10xds.com',
+        subject: 'Email from the ' + req.body.siteName + ' website',
+        html: '<h3>Hello</h3><p>You have received an email from ' + req.body.name + ' with email ID <i>' + req.body.email + '</i> and the question is - <br>' + req.body.question + '</p>'
+    };
 
-app.get('/send', function (req, res) {
     transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
             console.log(error);
