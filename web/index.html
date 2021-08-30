@@ -446,22 +446,25 @@
                             </h3>
                             <div class="rown">
                                 <div class="col-6">
-                                    <input style="  background-color: white;" type="text" placeholder="Your Name:">
+                                    <input id="contact-name" style="  background-color: white;" type="text"
+                                        placeholder="Your Name:">
                                 </div>
                                 <div class="col-6" style="padding-left: 2%">
-                                    <input style="  background-color: white;" type="text" placeholder="Your Email:">
+                                    <input id="contact-email" style="  background-color: white;" type="text"
+                                        placeholder="Your Email:">
                                 </div>
                             </div>
                             <br>
 
                             <div class="rown">
-                                <textarea class="haveQuestion" rows="7" cols="20"
-                                    placeholder="Your Question:"></textarea>
+                                <textarea id="contact-question" class="haveQuestion" rows="7"
+                                    placeholder="Your Question:">
+                                </textarea>
                             </div>
                             <br>
 
                             <div style="display: block;padding-left: 2%">
-                                <button class="buttonstyle" type="submit">
+                                <button class="buttonstyle" type="submit" onclick="sendContact()">
                                     Send
                                 </button>
                             </div>
@@ -649,6 +652,33 @@
                 }
 
                 lastScrollTop = st;
+            }
+
+            function sendContact() {
+                if (
+                    document.getElementById("contact-name").value.trim().length == 0 ||
+                    document.getElementById("contact-email").value.trim().length == 0 ||
+                    document.getElementById("contact-question").value.trim().length == 0
+                ) {
+                    alert("Please fill all the details");
+                } else {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("GET", "http://localhost:8081/send", true);
+                    xhr.onload = function (e) {
+                        if (xhr.readyState === 4) {
+                            if (xhr.status === 200) {
+                                console.log(xhr.responseText);
+                                alert("The question has been sent");
+                            } else {
+                                console.error(xhr.statusText);
+                            }
+                        }
+                    };
+                    xhr.onerror = function (e) {
+                        console.error(xhr.statusText);
+                    };
+                    xhr.send();
+                }
             }
         </script>
     </body>
